@@ -1,0 +1,7 @@
+(executable
+ (libraries unix cmdliner logs logs.fmt)
+ (preprocess
+  (pps lwt_ppx))
+ (public_name throttle_fstrim)
+ (package throttle-fstrim)
+ (name throttle_fstrim))

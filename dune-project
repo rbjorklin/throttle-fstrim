@@ -1,0 +1,15 @@
+(lang dune 2.7)
+(name throttle-fstrim)
+(generate_opam_files true)
+
+(source (github rbjorklin/throttle-fstrim))
+(license MIT)
+(authors "Robin Björklin")
+
+(package
+ (name throttle-fstrim)
+ (synopsis "Rudimentary support for throttling fstrim execution")
+ (depends
+  (dune (>= 2.7.1))
+  (cmdliner (>= 1.0.4))
+  (logs (>= 0.7.0))))
