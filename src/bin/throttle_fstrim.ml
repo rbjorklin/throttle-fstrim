@@ -96,11 +96,11 @@ let read_diskstats () =
     | exception End_of_file ->
         close_in diskstats_ic;
         diskstats
-    | _ :: _ :: device :: tl ->
+    | _ :: _ :: device :: stats ->
         (* See Field 11: https://www.kernel.org/doc/html/latest/admin-guide/iostats.html?highlight=11 *)
         inner
           (StringMap.add device
-             { device; io_time = int_of_string (List.nth tl 10) }
+             { device; io_time = int_of_string (List.nth stats 10) }
              diskstats)
     | _ ->
         Printf.eprintf "ERROR: Ill formed line.";
@@ -115,9 +115,7 @@ let fstrim ?(length = 64000000) ?(max_queue = 1.) (mounts : mount list) =
       flush_all ();
       let rec loop mount offset =
         let now = Unix.localtime (Unix.time ()) in
-        let start =
-          int_of_float (Float.floor (Unix.gettimeofday () *. 1000.))
-        in
+        let start = Float.floor (Unix.gettimeofday () *. 1000.) in
         let stats_before = read_diskstats () in
         let fstrim_ic =
           Unix.open_process_args_in "/usr/sbin/fstrim"
@@ -133,9 +131,7 @@ let fstrim ?(length = 64000000) ?(max_queue = 1.) (mounts : mount list) =
         match Unix.close_process_in fstrim_ic with
         | WEXITED exit_code when exit_code = 0 ->
             let stats_after = read_diskstats () in
-            let stop =
-              int_of_float (Float.ceil (Unix.gettimeofday () *. 1000.))
-            in
+            let stop = Float.ceil (Unix.gettimeofday () *. 1000.) in
             let weighted_time_spent_trimming =
               StringMap.fold
                 (fun key after_elem acc ->
@@ -146,20 +142,19 @@ let fstrim ?(length = 64000000) ?(max_queue = 1.) (mounts : mount list) =
                    (fun x max -> if x > max then x else max)
                    Int.min_int
             in
-            let time_delta = stop - start in
+            let time_delta = stop -. start in
             let queued =
-              float_of_int weighted_time_spent_trimming
-              /. float_of_int time_delta
+              float_of_int weighted_time_spent_trimming /. time_delta
             in
             Printf.eprintf
               "%d:%d:%d queue_size: %f, offset: %d, time_delta: %d, \
                weighted_time_spent_trimming: %d\n"
-              now.tm_hour now.tm_min now.tm_sec queued offset time_delta
-              weighted_time_spent_trimming;
+              now.tm_hour now.tm_min now.tm_sec queued offset
+              (int_of_float time_delta) weighted_time_spent_trimming;
             flush_all ();
             if queued > max_queue then
-              Printf.printf "sleeping %dms\n" time_delta;
-            Unix.sleepf (float_of_int time_delta /. 1000.);
+              Printf.printf "sleeping %dms\n" (int_of_float time_delta);
+            Unix.sleepf (time_delta /. 1000.);
             loop mount (offset + length)
         | WEXITED exit_code when exit_code = 1 ->
             Printf.printf "Reached end of filesystem boundry, moving on.\n"
