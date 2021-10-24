@@ -1,7 +1,7 @@
 throttle-fstrim
 ===============
 
-.. image:: https://github.com/rbjorklin/throttle-fstrim/actions/workflows/build/badge.svg
+.. image:: https://github.com/rbjorklin/throttle-fstrim/actions/workflows/build.yaml/badge.svg
 
 .. contents::
 
