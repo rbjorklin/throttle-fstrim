@@ -2,4 +2,5 @@
   (dev
     (flags (:standard)))
   (release
-    (flags (:standard -cclib -static -cclib -no-pie))))
+    (flags (:standard -cclib -static -cclib -no-pie))
+    (ocamlopt_flags (:standard -O3))))
