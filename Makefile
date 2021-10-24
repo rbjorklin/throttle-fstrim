@@ -1,26 +1,20 @@
 BINARY = throttle_fstrim
-PROFILE ?= release
+PROFILE ?= dev
+DOCKER = $(shell bash -c 'basename $$(which podman 2> /dev/null) 2> /dev/null || echo docker')
 
-.PHONY: install build run gen-opam
+.PHONY: deps build image
 
-install:
+image:
+	$(DOCKER) build --file Dockerfile --tag throttle-fstrim-build:latest .
+
+deps:
 	opam install --yes --deps-only .
 
-gen-opam:
-	dune build @install
-
 build:
-	opam exec -- dune build --profile $(PROFILE)
-
-run: build
-	./_build/default/src/bin/$(BINARY).exe
-
-test: build
-	docker build -t throttle-fstrim-test .
-	docker run --security-opt label=disable --cap-add SYS_ADMIN --detach --volume $(CURDIR)/workdir:/workdir --name sysbench throttle-fstrim-test:latest sleep 600
-	docker exec -t sysbench sysbench fileio prepare
-	docker exec -t sysbench sysbench fileio run --file-test-mode=rndrw
-	docker rm -f sysbench
+	opam exec -- dune build --profile $(PROFILE) @install
 
 clean:
-	docker rm -f sysbench
+	rm -rf _build
+
+docker-%: image
+	$(DOCKER) run --rm -ti --volume $(PWD):/build --workdir /build throttle-fstrim-build make $* PROFILE=$(PROFILE)
