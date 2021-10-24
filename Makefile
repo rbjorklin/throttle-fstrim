@@ -1,6 +1,7 @@
 BINARY = throttle_fstrim
 PROFILE ?= dev
 DOCKER = $(shell bash -c 'basename $$(which podman 2> /dev/null) 2> /dev/null || echo docker')
+SELINUX = $(shell bash -c '( [ "$$(getenforce)" = "Enforcing" ] && echo -n ":z") || echo -n ""')
 
 .PHONY: deps build image
 
@@ -17,4 +18,4 @@ clean:
 	rm -rf _build
 
 docker-%: image
-	$(DOCKER) run --rm -ti --volume $(PWD):/build --workdir /build throttle-fstrim-build make $* PROFILE=$(PROFILE)
+	$(DOCKER) run --rm -ti --volume $(PWD):/build$(SELINUX) --workdir /build throttle-fstrim-build make $* PROFILE=$(PROFILE)
