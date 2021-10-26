@@ -1,0 +1,4 @@
+(library
+ (name cmd)
+ (public_name cmd)
+ (libraries cmdliner))

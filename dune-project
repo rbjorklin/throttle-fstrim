@@ -11,6 +11,12 @@
  (synopsis "Rudimentary support for throttling fstrim execution")
  (depends
   (dune (>= 2.9.1))
-  (cmdliner (>= 1.0.4))
   (fmt (>= 0.8.10))
   (logs (>= 0.7.0))))
+
+(package
+ (name cmd)
+ (synopsis "Handle command line args")
+ (depends
+  (cmdliner
+    (>= 1.0.4))))

@@ -2,4 +2,4 @@
  (name throttle_fstrim)
  (public_name throttle_fstrim)
  (package throttle-fstrim)
- (libraries unix cmdliner logs logs.fmt))
+ (libraries unix cmd logs logs.fmt))
