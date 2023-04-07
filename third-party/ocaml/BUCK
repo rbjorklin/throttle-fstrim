@@ -1,0 +1,73 @@
+# buildifier: disable=no-effect
+prebuilt_cxx_library(
+    name = "ocaml-dev",
+    header_dirs = ["standard_library"],
+    header_only = True,
+    visibility = ["PUBLIC"],
+) if not host_info().os.is_windows else None
+
+# buildifier: disable=no-effect
+prebuilt_ocaml_library(
+    name = "ocaml.compiler-libs.common",
+    bytecode_lib = "standard_library/compiler-libs/ocamlcommon.cma",
+    include_dir = "standard_library/compiler-libs",
+    native_lib = "standard_library/compiler-libs/ocamlcommon.cmxa",
+    visibility = ["PUBLIC"],
+    deps = [],
+) if not host_info().os.is_windows else None
+
+# buildifier: disable=no-effect
+prebuilt_ocaml_library(
+    name = "ocaml-compiler-libs.common",
+    bytecode_lib = "opam/lib/ocaml-compiler-libs/common/ocaml_common.cma",
+    include_dir = "opam/lib/ocaml-compiler-libs/common",
+    native_lib = "opam/lib/ocaml-compiler-libs/common/ocaml_common.cmxa",
+    visibility = ["PUBLIC"],
+    deps = [],
+) if not host_info().os.is_windows else None
+
+# buildifier: disable=no-effect
+prebuilt_ocaml_library(
+    name = "unix",
+    bytecode_lib = "standard_library/unix/unix.cma",
+    include_dir = "standard_library/unix",
+    native_lib = "standard_library/unix/unix.cmxa",
+    visibility = ["PUBLIC"],
+    deps = [],
+) if not host_info().os.is_windows else None
+
+# buildifier: disable=no-effect
+prebuilt_ocaml_library(
+    name = "cmdliner",
+    bytecode_lib = "opam/lib/cmdliner/cmdliner.cma",
+    include_dir = "opam/lib/cmdliner",
+    native_lib = "opam/lib/cmdliner/cmdliner.cmxa",
+    visibility = ["PUBLIC"],
+) if not host_info().os.is_windows else None
+
+# buildifier: disable=no-effect
+prebuilt_ocaml_library(
+    name = "logs",
+    bytecode_lib = "opam/lib/logs/logs.cma",
+    include_dir = "opam/lib/logs",
+    native_lib = "opam/lib/logs/logs.cmxa",
+    visibility = ["PUBLIC"],
+) if not host_info().os.is_windows else None
+
+# buildifier: disable=no-effect
+prebuilt_ocaml_library(
+    name = "logs.fmt",
+    bytecode_lib = "opam/lib/logs/logs_fmt.cma",
+    include_dir = "opam/lib/logs",
+    native_lib = "opam/lib/logs/logs_fmt.cmxa",
+    visibility = ["PUBLIC"],
+) if not host_info().os.is_windows else None
+
+# buildifier: disable=no-effect
+prebuilt_ocaml_library(
+    name = "fmt",
+    bytecode_lib = "opam/lib/fmt/fmt.cma",
+    include_dir = "opam/lib/fmt",
+    native_lib = "opam/lib/fmt/fmt.cmxa",
+    visibility = ["PUBLIC"],
+) if not host_info().os.is_windows else None

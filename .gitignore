@@ -1,6 +1,13 @@
 # Created by https://www.toptal.com/developers/gitignore/api/ocaml
 # Edit at https://www.toptal.com/developers/gitignore?templates=ocaml
 
+### Buck ###
+buck-out/
+.buckconfig.local
+.buckd/
+.buckversion
+.fakebuckversion
+
 ### OCaml ###
 *.annot
 *.cmo
